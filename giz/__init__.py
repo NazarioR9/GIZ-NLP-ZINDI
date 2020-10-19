@@ -14,6 +14,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-from torch.nn.optim import AdamW
+from torch.optim import AdamW
 
 from keras.utils import to_categorical
