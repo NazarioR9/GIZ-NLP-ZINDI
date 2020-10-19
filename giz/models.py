@@ -1,8 +1,7 @@
-from utils import *
+from utils import load_model
 
-class TemplateModel(nn.Module):
-	def __init__(self, model_name, **args):
-		self.args = args
+class GIZModel(nn.Module):
+	def __init__(self, args):
 		self.model = load_model(args)
 
 	def forward(self, x):
