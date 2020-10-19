@@ -12,7 +12,7 @@ import librosa
 
 import torch
 import torch.nn as nn
-from torch.data.utils import Dataset, Dataloader
+from torch.utils.data import Dataset, Dataloader
 from torch.nn.optim import AdamW
 
 from keras.utils import to_categorical

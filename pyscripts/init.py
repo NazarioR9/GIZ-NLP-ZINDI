@@ -1,6 +1,3 @@
-import giz
-
-
 parser = argparse.ArgumentParser(description='Logging phase')
 
 parser.add_argument('-username', type=str, help='Your Zindi username')
