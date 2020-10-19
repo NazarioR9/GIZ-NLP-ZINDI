@@ -1,3 +1,13 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+import torchvision.models as tvm
+
+import os
+import numpy as pd
+import librosa
+
 __BASE__ = {
 	'resnet': 'fc',
 	'densenet': 'classifier',
@@ -61,18 +71,7 @@ def load_model(**args):
 
 	return model
 
-def load_dataset(args):
-	if mel in args.proc:
-		proc_fun = preprocess_mel
-	else:
-		proc_fun = preprocess_mfcc
 
-	train = pd.read_csv(args.data + 'Train.csv')
-	dataset = GIZDataset(train, proc_fun)
-
-	dataloader = Dataloader(dataset, batch_size=args.bs, shuffle=True)
-
-	return dataloader
 
 def preprocess_mfcc(signal, sr):
 

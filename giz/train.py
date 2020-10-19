@@ -1,3 +1,16 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+from torch.optim import AdamW
+
+from tqdm import tqdm
+
+from .data import load_dataset
+from .models import GIZModel
+from .utils import save_model
+
+
 def train(args):
 	print('Started training ....')
 
@@ -35,4 +48,4 @@ def train(args):
 
   			print(f"\rLoss : {epoch_loss/(i+1)}")
 
-  	save_model(model)
+  	save_model(model, args)

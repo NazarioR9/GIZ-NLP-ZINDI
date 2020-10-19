@@ -1,3 +1,9 @@
+import librosa
+import pandas as pd
+from torch.utils.data import Dataset, DataLoader
+from .utils import *
+
+
 class GIZDataset(Dataset):
 	def __init__(self, df, proc_fun, phase='train', **args):
 		self.df = df
@@ -27,7 +33,7 @@ class GIZDataset(Dataset):
 		}
 
 		if self.phase=='train':
-			y = self.df.lco[idx, 'target']
+			y = self.df.loc[idx, 'target']
 			y = self.map[y]
 
 			out.update(
@@ -35,3 +41,17 @@ class GIZDataset(Dataset):
 				)
 
 		return out
+
+
+def load_dataset(args):
+	if mel in args.proc:
+		proc_fun = preprocess_mel
+	else:
+		proc_fun = preprocess_mfcc
+
+	train = pd.read_csv(args.data + 'Train.csv')
+	dataset = GIZDataset(train, proc_fun)
+
+	dataloader = DataLoader(dataset, batch_size=args.bs, shuffle=True)
+
+	return dataloader

@@ -1,4 +1,4 @@
-import giz
+from giz.imports import *
 
 parser = argparse.ArgumentParser(description='Training phase parser')
 
@@ -27,7 +27,6 @@ def main():
 	args.proc = 'mfcc'
 
 	train(args)
-	
 
 
 if __name__ == '__main__':
