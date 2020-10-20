@@ -107,12 +107,12 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 
 	_min, _max = wav.min(), wav.max()
 
-	if (_max - _max) > esp:
+	if (_max - _max) > eps:
 		wav = np.clip(wav, _min, _max)
 		wav = 255 * (wav- _min) / (_max - _min)
 		wav = wav.astype(np.uint8)
 
-	return wav
+	return np.transpose(wav, (2, 0, 1))
 
 def resize(img, size=None):
 	if size is not None:

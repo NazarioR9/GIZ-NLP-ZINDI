@@ -22,7 +22,7 @@ def train(args):
 	pbar = tqdm(range(args.epochs), desc='Training ... ')
 
 	for epoch in pbar:
-		print(f'Epoch {epoch+1} : ')
+		print(f'\nEpoch {epoch+1} : ')
 
 		epoch_loss = 0
 
