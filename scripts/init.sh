@@ -2,8 +2,8 @@ alias pip=pip3
 alias python=python3
 
 pip install git+https://github.com/eaedk/testing-zindi-package.git -q
-pip install glob3 tqdm librosa -q
-pip install -e ..
+# pip install glob3 tqdm librosa -q
+pip install -e .
 
 mkdir data/raw/ data/processed/ 
 
