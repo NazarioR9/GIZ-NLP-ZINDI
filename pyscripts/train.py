@@ -1,4 +1,5 @@
 from giz.imports import *
+import argparse
 
 parser = argparse.ArgumentParser(description='Training phase parser')
 
