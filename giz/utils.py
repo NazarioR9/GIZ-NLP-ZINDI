@@ -45,17 +45,17 @@ def load_model(args):
 		- nb_layer : number of Dense blocks in the last layer
 	"""
 
-	model_name = args['model_name']
-	base_name = args['base_name']
-	drop_rate = args['drop_rate']
-	n_classes = args['n_classes']
+	model_name = args.model_name
+	base_name = args.base_name
+	drop_rate = args.drop_rate
+	n_classes = args.n_classes
 
 	fc_size = __FC__[base_name][model_name]
 	fc_name = __BASE__[base_name]
 
 	try:
-		n = args['nb_layer']
-	except KeyError:
+		n = args.nb_layer
+	except Exception:
 		n = 1
 
 	layers = []
