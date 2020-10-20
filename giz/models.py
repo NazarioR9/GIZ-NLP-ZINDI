@@ -1,4 +1,5 @@
 from .utils import load_model
+import torch.nn as nn
 
 class GIZModel(nn.Module):
 	def __init__(self, args):
