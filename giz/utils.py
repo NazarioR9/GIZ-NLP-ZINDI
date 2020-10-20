@@ -86,7 +86,7 @@ def preprocess_mfcc(signal, sr):
 def preprocess_mel(signal, sr):
 	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
 	spectrogram = librosa.power_to_db(spectrogram)
-	spectrogram  spectrogram.astype(np.float32)
+	spectrogram = spectrogram.astype(np.float32)
 
 	return spectrogram
 
