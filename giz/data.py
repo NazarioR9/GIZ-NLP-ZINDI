@@ -18,7 +18,7 @@ class GIZDataset(Dataset):
 	def __len__(self):
 		return len(self.df)
 
-	def read_wav(fn):
+	def read_wav(self, fn):
 		wav = librosa.load(fn, sr=self.sr)[0]
 		if len(wav) < self.sr:
 			wav = np.pad(wav, (0, self.sr-len(wav)), 'constant')
