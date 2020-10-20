@@ -67,7 +67,7 @@ def load_model(args):
 	layers += [nn.Linear(fc_size, n_classes)]
 
 	model = getattr(tvm, model_name)(pretrained=True)
-	setattr(model, nn.Sequential(*layers))
+	setattr(model, fc_name, nn.Sequential(*layers))
 
 	return model
 
