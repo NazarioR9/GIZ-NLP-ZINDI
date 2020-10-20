@@ -37,7 +37,7 @@ class GIZDataset(Dataset):
 			y = self.map[y]
 
 			out.update(
-				'target': torch.tensor(y, dtype=torch.float)
+				{'target': torch.tensor(y, dtype=torch.float)}
 				)
 
 		return out
