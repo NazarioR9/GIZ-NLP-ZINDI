@@ -33,7 +33,7 @@ __FC__ = {
 		}
 }
 
-def load_model(**args):
+def load_model(args):
 	"""
 		Arguments that must be in args:
 		- base_name: root name of the model
@@ -55,7 +55,7 @@ def load_model(**args):
 
 	try:
 		n = args['nb_layer']
-	except ValueError:
+	except KeyError:
 		n = 1
 
 	layers = []

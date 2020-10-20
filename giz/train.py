@@ -8,7 +8,7 @@ from .utils import save_model
 def train(args):
 	print("Started training ...")
 
-	dataloader = load_dataset(args)
+	dataloader = load_dataset(vars(args))
 	model = GIZModel(args)
 
 	criterion = nn.CrossEntropy()
