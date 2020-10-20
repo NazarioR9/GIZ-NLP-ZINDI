@@ -74,8 +74,7 @@ def load_model(**args):
 
 
 def preprocess_mfcc(signal, sr):
-
-    spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
+	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
     idx = [spectrogram > 0]
     spectrogram[idx] = np.log(spectrogram[idx])
 
@@ -95,8 +94,8 @@ def preprocess_mel(signal, sr):
 def preprocess_wav(wav, normalization=True):
     data = wav.reshape(1, -1)
     if normalization:
-        mean = data.mean()
-        data -= mean
+    	mean = data.mean()
+    	data -= mean
     return data
 
 def save_model(model, args):
