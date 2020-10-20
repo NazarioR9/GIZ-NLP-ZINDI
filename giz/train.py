@@ -20,6 +20,7 @@ def train(args):
 	model.to(device)
 
 	pbar = tqdm(range(args.epochs), desc='Training ... ')
+	size = len(dataloader)
 
 	for epoch in pbar:
 		print(f'\nEpoch {epoch+1} : ')
@@ -40,6 +41,6 @@ def train(args):
 			loss.backward()
 			opt.step()
 
-			print(f"\rLoss : {epoch_loss/(i+1)}", end='')
+			print(f"\r[{i+1}/{size}] Loss : {epoch_loss/(i+1)}", end='')
 
 	save_model(model, args)
