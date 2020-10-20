@@ -121,6 +121,6 @@ def resize(img, size=None):
 
 def save_model(model, args):
 	path = "{}{}/{}_{}/".format(args.model_hub,args.base_name,args.model_name,args.proc)
-	os.mkdir(path, exist_ok=True)
+	os.makedirs(path, exist_ok=True)
 
 	torch.save(model.state_dict(), f'{path}model.bin')

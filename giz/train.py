@@ -42,5 +42,6 @@ def train(args):
 			opt.step()
 
 			print(f"\r[{i+1}/{size}] Loss : {epoch_loss/(i+1)}", end='')
+		print()
 
 	save_model(model, args)
