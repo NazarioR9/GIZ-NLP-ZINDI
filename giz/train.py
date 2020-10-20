@@ -40,6 +40,6 @@ def train(args):
 			loss.backward()
 			opt.step()
 
-			print(f"\rLoss : {epoch_loss/(i+1)}")
+			print(f"\rLoss : {epoch_loss/(i+1)}", end='')
 
 	save_model(model, args)
