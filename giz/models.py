@@ -1,4 +1,4 @@
-from utils import load_model
+from .utils import load_model
 
 class GIZModel(nn.Module):
 	def __init__(self, args):
