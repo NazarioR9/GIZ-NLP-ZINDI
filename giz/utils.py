@@ -72,34 +72,33 @@ def load_model(**args):
 	return model
 
 
-
 def preprocess_mfcc(signal, sr):
 	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
-    idx = [spectrogram > 0]
-    spectrogram[idx] = np.log(spectrogram[idx])
+	idx = [spectrogram > 0]
+	spectrogram[idx] = np.log(spectrogram[idx])
 
-    dct_filters = librosa.filters.dct(n_filters=40, n_input=40)
-    mfcc = [np.matmul(dct_filters, x) for x in np.split(spectrogram, spectrogram.shape[1], axis=1)]
-    mfcc = np.hstack(mfcc)
-    mfcc = mfcc.astype(np.float32)
-    return mfcc
+	dct_filters = librosa.filters.dct(n_filters=40, n_input=40)
+	mfcc = [np.matmul(dct_filters, x) for x in np.split(spectrogram, spectrogram.shape[1], axis=1)]
+	mfcc = np.hstack(mfcc)
+	mfcc = mfcc.astype(np.float32)
+	return mfcc
 
 def preprocess_mel(signal, sr):
-    spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
-    spectrogram = librosa.power_to_db(spectrogram)
-    spectrogram = spectrogram.astype(np.float32)
+	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
+	spectrogram = librosa.power_to_db(spectrogram)
+	spectrogram  spectrogram.astype(np.float32)
 
-    return spectrogram
+	return spectrogram
 
 def preprocess_wav(wav, normalization=True):
-    data = wav.reshape(1, -1)
-    if normalization:
-    	mean = data.mean()
-    	data -= mean
-    return data
+	data = wav.reshape(1, -1)
+	if normalization:
+		mean = data.mean()
+		data -= mean
+	return data
 
 def save_model(model, args):
 	path = "{}{}/{}_{}/".format(args.model_hub,args.base_name,args.model_name,args.proc)
-	os.mkdir(path, exit_ok=True)
+	os.mkdir(path, exist_ok=True)
 
 	torch.save(model.state_dict(), f'{path}model.bin')
