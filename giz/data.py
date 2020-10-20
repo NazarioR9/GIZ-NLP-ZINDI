@@ -6,6 +6,8 @@ from .utils import *
 
 class GIZDataset(Dataset):
 	def __init__(self, df, proc_fun, phase='train', **args):
+		self(GIZDataset, self).__init__()
+
 		self.df = df
 		self.phase = phase
 		self.sr = 16000
