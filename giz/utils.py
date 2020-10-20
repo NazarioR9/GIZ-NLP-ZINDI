@@ -5,7 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import torchvision.models as tvm
 
 import os
-import numpy as pd
+import numpy as np
 import librosa
 
 __BASE__ = {
