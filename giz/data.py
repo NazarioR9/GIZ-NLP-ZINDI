@@ -19,9 +19,9 @@ class GIZDataset(Dataset):
 
 	def read_wav(fn):
 		wav = librosa.load(fn, sr=self.sr)[0]
-	    if len(wav) < self.sr:
-			wav = np.pad(wav, (0, self.sr - len(wav)), 'constant')
-	    return wav[:self.sr]
+		if len(wav) < self.sr:
+			wav = np.pad(wav, (0, self.sr-len(wav)), 'constant')
+		return wav[:self.sr]
 
 	def __getitem__(self, idx):
 		fn = self.df.loc[idx, 'fn']
