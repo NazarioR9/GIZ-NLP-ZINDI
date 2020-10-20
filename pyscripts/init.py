@@ -25,10 +25,11 @@ def preprocessing():
 	additionnal = glob.glob("data/latest_keywords/*/*.wav")
 
 	add = pd.DataFrame({'fn': additionnal})
-	add['label'] = add['fn'].apply(lambda x: x.split('/')[-2])
+	add['target'] = add['fn'].apply(lambda x: x.split('/')[-2])
 
 	train = pd.read_csv('data/raw/Train.csv')
 	train['fn'] = 'data/' + train['fn']
+	train.rename(columns = {'label': 'target'}, inplace=True)
 
 	train = pd.concat([train, add], axis=0)
 	train.to_csv('data/processed/Train.csv', index=False)
