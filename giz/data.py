@@ -13,6 +13,7 @@ class GIZDataset(Dataset):
 		self.phase = phase
 		self.size = size
 		self.sr = 16000
+		self.secs = 3
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
 		self.map = dict(zip(self.classes, range(len(self.classes))))
@@ -22,9 +23,10 @@ class GIZDataset(Dataset):
 
 	def read_wav(self, fn):
 		wav = librosa.load(fn, sr=self.sr)[0]
-		if len(wav) < self.sr:
-			wav = np.pad(wav, (0, self.sr-len(wav)), 'constant')
-		return wav[:self.sr]
+
+		if len(wav) < self.sr*self.secs:
+			wav = np.pad(wav, (0, self.sr*self.secs-len(wav)), 'constant')
+		return wav[:self.sr*self.secs]
 
 	def __getitem__(self, idx):
 		fn = self.df.loc[idx, 'fn']
