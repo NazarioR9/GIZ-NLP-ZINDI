@@ -6,11 +6,12 @@ from .utils import *
 
 
 class GIZDataset(Dataset):
-	def __init__(self, df, proc_fun, phase='train', **args):
+	def __init__(self, df, proc_fun, phase='train', size=224, **args):
 		super(GIZDataset, self).__init__()
 
 		self.df = df
 		self.phase = phase
+		self.size = size
 		self.sr = 16000
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
@@ -29,6 +30,8 @@ class GIZDataset(Dataset):
 		fn = self.df.loc[idx, 'fn']
 		wav = self.read_wav(fn)
 		wav = self.proc_fun(wav, self.sr)
+		wav = mono_to_color(wav)
+		wav = resize(wav)
 
 		out = {
 			'wav': torch.from_numpy(wav).float(),
@@ -52,7 +55,7 @@ def load_dataset(args):
 		proc_fun = preprocess_mfcc
 
 	train = pd.read_csv(args.data + 'Train.csv')
-	dataset = GIZDataset(train, proc_fun)
+	dataset = GIZDataset(train, proc_fun, size=args.size)
 
 	dataloader = DataLoader(dataset, batch_size=args.bs, shuffle=True)
 
