@@ -1,5 +1,6 @@
 import librosa
 import pandas as pd
+import torch
 from torch.utils.data import Dataset, DataLoader
 from .utils import *
 
@@ -30,7 +31,7 @@ class GIZDataset(Dataset):
 		wav = self.proc_fun(wav, self.sr)
 
 		out = {
-			'wav': torch.from_numpy(wav_numpy).float(),
+			'wav': torch.from_numpy(wav).float(),
 		}
 
 		if self.phase=='train':
