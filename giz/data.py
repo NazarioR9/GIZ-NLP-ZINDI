@@ -45,7 +45,7 @@ class GIZDataset(Dataset):
 
 
 def load_dataset(args):
-	if mel in args.proc:
+	if 'mel' in args.proc:
 		proc_fun = preprocess_mel
 	else:
 		proc_fun = preprocess_mfcc
