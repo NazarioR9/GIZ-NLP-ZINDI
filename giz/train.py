@@ -12,7 +12,7 @@ def train(args):
 	dataloader = load_dataset(args)
 	model = GIZModel(args)
 
-	criterion = nn.CrossEntropy()
+	criterion = nn.CrossEntropyLoss()
 	opt = AdamW(model.parameters(), lr=args.lr)
 	device = 'cuda' if args.cuda else 'cpu'
 
