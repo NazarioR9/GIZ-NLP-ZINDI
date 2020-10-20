@@ -12,6 +12,7 @@ class GIZDataset(Dataset):
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
 		self.map = dict(self.classes, range(len(self.classes)))
+		
 
 
 	def __len__(self):

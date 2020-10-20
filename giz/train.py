@@ -1,37 +1,31 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import Dataset, DataLoader
 from torch.optim import AdamW
-
 from tqdm import tqdm
-
 from .data import load_dataset
 from .models import GIZModel
 from .utils import save_model
 
 
 def train(args):
-	print('Started training ....')
+	print("Started training ...")
 
-	dataloder = load_dataset(args)
+	dataloader = load_dataset(args)
 	model = GIZModel(args)
 
-	criterion = nn.CrossEntropyLoss()
-  opt = AdamW(model.parameters(), lr=args.lr)
-  device = 'cuda' if args.cuda else 'cpu'
+	criterion = nn.CrossEntropy()
+	opt = AdamW(model.parameters(), lr=args.lr)
+	device = 'cuda' if args.cuda else 'cpu'
 
 	model.train()
 	model.to(device)
 
-	pbar = tqdm(range(args.epochs), desc='Training ...')
+	pbar = tqdm(range(args.epochs), desc='Training ... ')
 
 	for epoch in pbar:
-		print(f'Epoch {i+1} : ')
+		print(f'Epoch {epoch+1} : ')
 
 		epoch_loss = 0
 
-		for i, data in enumerate(dataloder):
+		for i, data in enumerate(dataloader):
 			opt.zero_grad()
 
 			data['wav'] = data['wav'].to(device)
