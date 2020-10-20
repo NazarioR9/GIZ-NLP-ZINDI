@@ -60,11 +60,11 @@ def load_model(args):
 
 	layers = []
 	for _ in range(n):
-		layers += [nn.Dense(fc_size, fc_size//2), nn.Dropout(drop_rate)]
+		layers += [nn.Linear(fc_size, fc_size//2), nn.Dropout(drop_rate)]
 		fc_size = fc_size//2
 
 
-	layers += [nn.Dense(fc_size, n_classes)]
+	layers += [nn.Linear(fc_size, n_classes)]
 
 	model = getattr(tvm, model_name)(pretrained=True)
 	setattr(model, nn.Sequential(*layers))
