@@ -11,10 +11,8 @@ class GIZDataset(Dataset):
 		self.sr = 16000
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
-		self.map = dict(self.classes, range(len(self.classes)))
+		self.map = dict(zip(self.classes, range(len(self.classes))))
 		
-
-
 	def __len__(self):
 		return len(self.df)
 
