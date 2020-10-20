@@ -1,6 +1,3 @@
-import os, sys
-sys.path.insert(0, os.path.abspath(os.path.join('..', 'giz')))
-
 from giz.imports import *
 
 parser = argparse.ArgumentParser(description='Training phase parser')
