@@ -35,7 +35,7 @@ def train(args):
 
 def one_epoch(model, dataloader, opt=None, criterion=None, phase="train"):
 
-	if phase="train":
+	if phase=="train":
 		model.train()
 		opt.zero_grad()
 	else:
@@ -58,7 +58,7 @@ def one_epoch(model, dataloader, opt=None, criterion=None, phase="train"):
 			if phase=='train':
 				raise ValueError("Make sure that **data as key 'target'** or **phase is correct**.")
 
-		if phase="train":
+		if phase=="train":
 			loss.backward()
 			opt.step()
 			opt.zero_grad()
