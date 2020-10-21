@@ -49,4 +49,4 @@ def save_model(model, args):
 	path = "{}{}/{}_{}/".format(args.model_hub, args.base_name, args.model_name, args.proc)
 	os.makedirs(path, exist_ok=True)
 
-	torch.save(model.state_dict(), f'{path}model.bin')
+	torch.save(model.state_dict(), f'{path}{args.save_model}')

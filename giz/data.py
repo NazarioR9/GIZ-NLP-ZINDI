@@ -40,7 +40,7 @@ class GIZDataset(Dataset):
 			'wav': torch.from_numpy(wav).float(),
 		}
 
-		if self.phase=='train':
+		if self.phase!='test':
 			y = self.df.loc[idx, 'target']
 			y = self.map[y]
 
@@ -58,8 +58,12 @@ def load_dataset(args):
 		proc_fun = preprocess_mfcc
 
 	train = pd.read_csv(args.data + 'Train.csv')
-	dataset = GIZDataset(train, proc_fun, size=args.size)
+	trainset = GIZDataset(train, proc_fun, size=args.size)
 
-	dataloader = DataLoader(dataset, batch_size=args.bs, shuffle=True)
+	val = pd.read_csv(args.data + 'Val.csv')
+	valset = GIZDataset(val, proc_fun, size=args.size, phase='val')
 
-	return dataloader
+	trainloader = DataLoader(trainset, batch_size=args.bs, shuffle=True)
+	valoader = DataLoader(valset, batch_size=args.bs//2)
+
+	return trainloader, valoader
