@@ -26,14 +26,14 @@ def train(args):
 	for epoch in pbar:
 		print(f'\nEpoch {epoch+1} : ')
 
-		train_loss = one_epoch(model, trainloader, opt, criterion)
-		val_loss = one_epoch(model, valoader, phase="val")
+		train_loss = one_epoch(model, trainloader, device, opt, criterion)
+		val_loss = one_epoch(model, valoader, device, phase="val")
 
 		if val_loss < best_loss:
 			best_loss = val_loss
 			save_model(model, args)
 
-def one_epoch(model, dataloader, opt=None, criterion=None, phase="train"):
+def one_epoch(model, dataloader, device, opt=None, criterion=None, phase="train"):
 
 	if phase=="train":
 		model.train()
