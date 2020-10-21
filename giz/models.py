@@ -43,7 +43,7 @@ class DenseBlock(nn.Module):
 	def __init__(self, fc_size, dp_rate):
 		super(DenseBlock, self).__init__()
 
-		self.linear = nn.linear(fc_size, fc_size//2)
+		self.linear = nn.Linear(fc_size, fc_size//2)
 		self.dropout = nn.Dropout(dp_rate)
 
 		nn.init.xavier_normal_(self.linear.weight)
@@ -79,13 +79,12 @@ def load_model(args):
 	except Exception:
 		n = 1
 
-	# layers = []
-	# for _ in range(n):
-	# 	layers += [nn.Linear(fc_size, fc_size//2), nn.Dropout(drop_rate)]
-	# 	fc_size = fc_size//2
+	layers = []
+	for _ in range(n):
+		layers += [DenseBlock(fc_size, drop_rate)]
+		fc_size = fc_size//2
 
-	layers = [DenseBlock(fc_size//2*(i+1), drop_rate) for i in range(n)]
-	layers += [nn.Linear(fc_size//2*n, n_classes)]
+	layers += [nn.Linear(fc_size, n_classes)]
 
 	model = getattr(tvm, model_name)(pretrained=True)
 	setattr(model, fc_name, nn.Sequential(*layers))
