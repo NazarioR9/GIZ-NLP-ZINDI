@@ -50,7 +50,7 @@ def splitter(args):
 	if args.strategy=='tts':
 		train, val = train_test_split(df, test_size=args.split, stratify=df['target'], random_state=args.seed)
 
-		path = args.to + f'fold_{i}'
+		path = args.to + f'tts'
 		os.makedirs(path)
 
 		train.to_csv(path + 'Train.csv', index=False)
