@@ -85,7 +85,7 @@ def preprocess_mfcc(signal, sr):
 	return mfcc
 
 def preprocess_mel(signal, sr):
-	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=40, hop_length=160, n_fft=480, fmin=20, fmax=4000)
+	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=128, fmin=20, fmax=4000)
 	spectrogram = librosa.power_to_db(spectrogram)
 	spectrogram = spectrogram.astype(np.float32)
 
@@ -107,9 +107,9 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 
 	_min, _max = wav.min(), wav.max()
 
-	if (_max - _max) > eps:
+	if (_max - _min) > eps:
 		wav = np.clip(wav, _min, _max)
-		wav = 255 * (wav- _min) / (_max - _min)
+		wav = 255 * (wav - _min) / (_max - _min)
 		wav = wav.astype(np.uint8)
 
 	return np.transpose(wav, (2, 0, 1))
