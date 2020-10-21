@@ -27,7 +27,7 @@ def train(args):
 		print(f'\nEpoch {epoch+1} : ')
 
 		train_loss = one_epoch(model, trainloader, device, opt, criterion)
-		val_loss = one_epoch(model, valoader, device, phase="val")
+		val_loss = one_epoch(model, valoader, device, opt, criterion, phase="val")
 
 		if val_loss < best_loss:
 			best_loss = val_loss
