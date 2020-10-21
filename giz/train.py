@@ -7,7 +7,7 @@ from .utils import save_model
 
 
 def train(args):
-	print("Started training ...")
+	print(f"\n[{args.proc.upper()}]Started training ...")
 
 	dataloader = load_dataset(args)
 	model = GIZModel(args)
