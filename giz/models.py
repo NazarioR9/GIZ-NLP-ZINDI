@@ -3,6 +3,32 @@ import torchvision.models as tvm
 from .utils import *
 
 
+__BASE__ = {
+	'resnet': 'fc',
+	'densenet': 'classifier',
+	'xresnet': '',
+	'efficientnet': ''
+}
+
+__FC__ = {
+	'resnet': 
+		{
+			'resnet18': 512,
+			'resnet34': 512,
+			'resnet50': 2048,
+			'resnet101': 2048,
+			'resnet152': 2048,
+		},
+	'densenet':
+		{
+			'densenet121': None,
+		    'densenet169': None,
+		    'densenet201': None,
+		    'densenet161': 2208,
+		}
+}
+
+
 class GIZModel(nn.Module):
 	def __init__(self, args):
 		super(GIZModel, self).__init__()
