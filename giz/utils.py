@@ -42,8 +42,7 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 
 def resize(img, size=None):
 	if size is not None:
-		img = cv2.resize(img, (size, size))
-		return np.transpose(img, (2, 0, 1))
+		return cv2.resize(img, (size, size))
 	return img
 
 def get_save_path(args):
