@@ -34,7 +34,7 @@ class GIZDataset(Dataset):
 		fn = self.df.loc[idx, 'fn']
 		wav = self.read_wav(fn)
 		wav = self.proc_fun(wav, self.sr)
-		if self.args['mono']:
+		if not self.args['mono']:
 			wav = mono_to_color(wav)
 		wav = resize(wav)
 

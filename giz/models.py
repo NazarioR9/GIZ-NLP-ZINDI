@@ -85,7 +85,8 @@ def create_model(args, model=None):
 
 	#*******Head layer
 	if args.mono:
-		w = model.conv1.weight.sum(dim=1, keepdim=True)
+		w = getattr(model, __HEAD__[base_name])
+		w = w.weight.sum(dim=1, keepdim=True)
 
 		head = nn.Conv2d(1, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
 		head.weight = torch.nn.Parameter(w)
@@ -116,6 +117,7 @@ def get_model(args):
 	if os.path.exists(path) and len(os.listdir(path)):
 		cargs = copy.copy(args)
 		cargs.n_classes = 2
+		cargs.mono = False #-----
 		model = GIZModel(cargs)
 		model.load_state_dict(torch.load(f'{path}{args.save_model}'))
 		model.model = create_model(args, model.model)
