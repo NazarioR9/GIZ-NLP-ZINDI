@@ -103,4 +103,4 @@ def get_model(args):
 	if os.path.exists(path) and len(os.listdir(path)):
 		model.load_state_dict(torch.load(f'{path}{args.save_model}'))
 
-	model
+	return model
