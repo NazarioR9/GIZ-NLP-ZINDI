@@ -38,11 +38,12 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 		wav = 255 * (wav - _min) / (_max - _min)
 		wav = wav.astype(np.uint8)
 
-	return np.transpose(wav, (2, 0, 1))
+	return wav
 
 def resize(img, size=None):
 	if size is not None:
-		return cv2.resize(img, (size, size))
+		img = cv2.resize(img, (size, size))
+		return np.transpose(img, (2, 0, 1))
 	return img
 
 def get_save_path(args):
