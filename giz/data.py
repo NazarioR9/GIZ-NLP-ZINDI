@@ -59,11 +59,13 @@ def load_dataset(args):
 
 	train = pd.read_csv(args.data + 'Train.csv')
 	trainset = GIZDataset(train, proc_fun, size=args.size)
-
-	val = pd.read_csv(args.data + 'Val.csv')
-	valset = GIZDataset(val, proc_fun, size=args.size, phase='val')
-
 	trainloader = DataLoader(trainset, batch_size=args.bs, shuffle=True)
-	valoader = DataLoader(valset, batch_size=args.bs//2)
+
+	valoader = None
+
+	if !args.pretrain:
+		val = pd.read_csv(args.data + 'Val.csv')
+		valset = GIZDataset(val, proc_fun, size=args.size, phase='val')
+		valoader = DataLoader(valset, batch_size=args.bs//2)
 
 	return trainloader, valoader

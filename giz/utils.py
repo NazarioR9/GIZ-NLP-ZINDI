@@ -45,8 +45,17 @@ def resize(img, size=None):
 		return cv2.resize(img, (size, size))
 	return img
 
-def save_model(model, args):
+def get_save_path(args):
 	path = "{}{}/{}_{}/".format(args.model_hub, args.base_name, args.model_name, args.proc)
+	
+	if args.pretrain:
+		path += 'pretrain/'
+
+	return path
+
+def save_model(model, args):
+	path = get_save_path(args)
+
 	os.makedirs(path, exist_ok=True)
 
 	torch.save(model.state_dict(), f'{path}{args.save_model}')

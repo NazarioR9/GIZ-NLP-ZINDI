@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser(description='Logging phase')
 parser.add_argument('-username', type=str, help='Your Zindi username')
 parser.add_argument('-data', type=str, default='data/raw/', help="***")
 parser.add_argument('-to', type=str, default='data/processed/', help="***")
+parser.add_argument('-mid', type=str, default='data/praw/', help="***")
 parser.add_argument('-strategy', choices=['tts', 'skf'], default='tts', help="split strategy")
 parser.add_argument('-n_splits', type=int, default=1, help="nb of splits. Is used with kf/skf")
 parser.add_argument('-split', type=float, default=0.2, help="test size portion")
@@ -36,6 +37,8 @@ def preprocessing(args):
 	train = pd.read_csv(args.data + 'Train.csv')
 	train['fn'] = 'data/' + train['fn']
 	train.rename(columns = {'label': 'target'}, inplace=True)
+	train.to_csv(args.mid + 'Train.csv', index=False)
+
 
 	train = pd.concat([train, add], axis=0)
 	train.to_csv(args.to + 'Train.csv', index=False)
@@ -44,13 +47,27 @@ def preprocessing(args):
 	subs['fn'] = 'data/' + subs['fn']
 	subs.to_csv(args.to + 'SampleSubmission.csv', index=False)
 
+def pretrain_processing(args):
+	train = pd.read_csv(args.mid + 'Train.csv')
+	full = pd.read_csv(args.to + 'Train.csv')
+
+	lung_words = full[:train.shape[0]].target.unique()
+	eng_words = [w for w in train.target.unique() if w not in lung_words]
+
+	train['label'] = train['target'].values
+	train = train[['fn', 'label']]
+	train['target'] = train.label.apply(lambda x: int(x in eng_words))
+
+	train.to_csv(args.mid + 'Train.csv', index=False)
+
+
 def splitter(args):
 	df = pd.read_csv(args.to + 'Train.csv')
+	path = args.to + args.strategy + '/'
 
 	if args.strategy=='tts':
 		train, val = train_test_split(df, test_size=args.split, stratify=df['target'], random_state=args.seed)
-
-		path = args.to + f'tts/'
+		
 		os.makedirs(path)
 
 		train.to_csv(path + 'Train.csv', index=False)
@@ -61,7 +78,7 @@ def splitter(args):
 			train = df.loc[tr].reset_index(drop=True)
 			val = df.loc[vr].reset_index(drop=True)
 
-			path = args.to + f'fold_{i}/'
+			path += f'fold_{i}/'
 			os.makedirs(path, exist_ok=True)
 
 			train.to_csv(path + 'Train.csv', index=False)

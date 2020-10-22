@@ -3,7 +3,7 @@ from torch.optim import AdamW
 from tqdm import tqdm
 import numpy as np
 from .data import load_dataset
-from .models import GIZModel
+from .models import get_model
 from .utils import save_model
 
 
@@ -13,7 +13,7 @@ def train(args):
 	best_loss = np.inf
 
 	trainloader, valoader = load_dataset(args)
-	model = GIZModel(args)
+	model = get_model(args)
 
 	criterion = nn.CrossEntropyLoss()
 	opt = AdamW(model.parameters(), lr=args.lr)
@@ -27,11 +27,17 @@ def train(args):
 		print(f'\nEpoch {epoch+1} : ')
 
 		train_loss = one_epoch(model, trainloader, device, opt, criterion)
+
+		if args.pretrain:
+			save_model(model, args)
+			continue
+
 		val_loss = one_epoch(model, valoader, device, opt, criterion, phase="val")
 
 		if val_loss < best_loss:
 			best_loss = val_loss
 			save_model(model, args)
+
 
 def one_epoch(model, dataloader, device, opt=None, criterion=None, phase="train"):
 
