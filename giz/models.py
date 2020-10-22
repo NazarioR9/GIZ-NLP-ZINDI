@@ -117,7 +117,6 @@ def get_model(args):
 	if os.path.exists(path) and len(os.listdir(path)):
 		cargs = copy.copy(args)
 		cargs.n_classes = 2
-		cargs.mono = False #-----
 		model = GIZModel(cargs)
 		model.load_state_dict(torch.load(f'{path}{args.save_model}'))
 		model.model = create_model(args, model.model)
