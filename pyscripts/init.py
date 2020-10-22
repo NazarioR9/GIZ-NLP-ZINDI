@@ -95,6 +95,8 @@ def main(parser):
 	if args.pp: 
 		preprocessing(args)
 		splitter(args)
+		pretrain_processing(args)
+
 
 
 if __name__ == '__main__':
