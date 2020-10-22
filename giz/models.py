@@ -85,7 +85,7 @@ def create_model(args, model=None):
 
 	#*******Head layer
 	if args.mono:
-		w = modelconv1.weight.sum(dim=1, keepdim=True)
+		w = model.conv1.weight.sum(dim=1, keepdim=True)
 
 		head = nn.Conv2d(1, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
 		head.weight = torch.nn.Parameter(w)
@@ -108,7 +108,6 @@ def create_model(args, model=None):
 
 	return model
 
-def get_head()
 
 def get_model(args):
 	path = get_save_path(args) + 'pretrain/'
