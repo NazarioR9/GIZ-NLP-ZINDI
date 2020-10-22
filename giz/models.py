@@ -5,9 +5,16 @@ import torchvision.models as tvm
 from .utils import *
 
 
-__BASE__ = {
+__LAST__ = {
 	'resnet': 'fc',
 	'densenet': 'classifier',
+	'xresnet': '',
+	'efficientnet': ''
+}
+
+__HEAD__ = {
+	'resnet': 'conv1',
+	'densenet': 'conv0',
 	'xresnet': '',
 	'efficientnet': ''
 }
@@ -65,23 +72,30 @@ def create_model(args, model=None):
 		- model_name : model name
 		- drop_rate: percentage of droupout
 		- n_classes : nb of output classes
-
-		Optional arguments:
 		- nb_layer : number of Dense blocks in the last layer
 	"""
-
 	model_name = args.model_name
 	base_name = args.base_name
 	drop_rate = args.drop_rate
 	n_classes = args.n_classes
+	n = args.nb_layer
 
+
+	model = model or getattr(tvm, model_name)(pretrained=True)
+
+	#*******Head layer
+	if args.mono:
+		w = modelconv1.weight.sum(dim=1, keepdim=True)
+
+		head = nn.Conv2d(1, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
+		head.weight = torch.nn.Parameter(w)
+
+		setattr(model, __HEAD__[base_name], head)
+
+	#*******Last layer
 	fc_size = __FC__[base_name][model_name]
-	fc_name = __BASE__[base_name]
+	fc_name = __LAST__[base_name]
 
-	try:
-		n = args.nb_layer
-	except Exception:
-		n = 1
 
 	layers = []
 	for _ in range(n):
@@ -90,14 +104,14 @@ def create_model(args, model=None):
 
 	layers += [DenseBlock(fc_size, drop_rate, n_classes)]
 
-	model = model or getattr(tvm, model_name)(pretrained=True)
 	setattr(model, fc_name, nn.Sequential(*layers))
 
 	return model
 
+def get_head()
 
 def get_model(args):
-	path = get_save_path(args)
+	path = get_save_path(args) + 'pretrain/'
 	model = GIZModel(args)	
 
 	if os.path.exists(path) and len(os.listdir(path)):

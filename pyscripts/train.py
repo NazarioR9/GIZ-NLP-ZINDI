@@ -20,6 +20,7 @@ parser.add_argument('--pseudo', action='store_true', help='use pseudo labels for
 parser.add_argument('--pretrain', action='store_true', help='')
 parser.add_argument('-model_hub', type=str, default='model_hub/', help='')
 parser.add_argument('-pseudo_dir', type=str, default='pseudo/', help='')
+parser.add_argument('--mono', action='store_true', help='')
 parser.add_argument('--mel', action='store_true', default=True, help='')
 parser.add_argument('--mfcc', action='store_true', help='')
 parser.add_argument('--cuda', action='store_true', help='')
