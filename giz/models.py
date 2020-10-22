@@ -46,8 +46,8 @@ class DenseBlock(nn.Module):
 
 		n = n_classes or fc_size//2
 
-		self.linear = nn.Linear(fc_size, n)
 		self.dropout = nn.Dropout(dp_rate)
+		self.linear = nn.Linear(fc_size, n)
 
 		nn.init.xavier_normal_(self.linear.weight)
 
@@ -87,7 +87,7 @@ def create_model(args):
 		layers += [DenseBlock(fc_size, drop_rate)]
 		fc_size = fc_size//2
 
-	layers += [nn.AdaptiveAvgPool2d(1), DenseBlock(fc_size, drop_rate, n_classes)]
+	layers += [DenseBlock(fc_size, drop_rate, n_classes)]
 
 	model = getattr(tvm, model_name)(pretrained=True)
 	setattr(model, fc_name, nn.Sequential(*layers))
