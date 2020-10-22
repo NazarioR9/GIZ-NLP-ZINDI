@@ -4,7 +4,7 @@ from tqdm import tqdm
 import numpy as np
 from .data import load_dataset
 from .models import get_model
-from .utils import save_model
+from .utils import save_model, get_loss
 
 
 def train(args):
@@ -15,7 +15,7 @@ def train(args):
 	trainloader, valoader = load_dataset(args)
 	model = get_model(args)
 
-	criterion = nn.CrossEntropyLoss()
+	criterion = get_loss(args)
 	opt = AdamW(model.parameters(), lr=args.lr)
 	device = 'cuda' if args.cuda else 'cpu'
 

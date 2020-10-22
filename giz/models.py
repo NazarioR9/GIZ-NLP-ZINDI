@@ -1,4 +1,5 @@
 import torch
+import copy
 import torch.nn as nn
 import torchvision.models as tvm
 from .utils import *
@@ -57,7 +58,7 @@ class DenseBlock(nn.Module):
 
 
 
-def create_model(args):
+def create_model(args, model=None):
 	"""
 		Arguments that must be in args:
 		- base_name: root name of the model
@@ -89,7 +90,7 @@ def create_model(args):
 
 	layers += [DenseBlock(fc_size, drop_rate, n_classes)]
 
-	model = getattr(tvm, model_name)(pretrained=True)
+	model = model or getattr(tvm, model_name)(pretrained=True)
 	setattr(model, fc_name, nn.Sequential(*layers))
 
 	return model
@@ -97,10 +98,13 @@ def create_model(args):
 
 def get_model(args):
 	path = get_save_path(args)
-
-	model = GIZModel(args)
+	model = GIZModel(args)	
 
 	if os.path.exists(path) and len(os.listdir(path)):
+		cargs = copy.copy(args)
+		cargs.n_classes = 2
+		model = GIZModel(cargs)
 		model.load_state_dict(torch.load(f'{path}{args.save_model}'))
+		model.model = create_model(args, model.model)
 
 	return model

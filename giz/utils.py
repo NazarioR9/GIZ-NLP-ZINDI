@@ -47,7 +47,7 @@ def resize(img, size=None):
 
 def get_save_path(args):
 	path = "{}{}/{}_{}/".format(args.model_hub, args.base_name, args.model_name, args.proc)
-	
+
 	if args.pretrain:
 		path += 'pretrain/'
 
@@ -59,3 +59,10 @@ def save_model(model, args):
 	os.makedirs(path, exist_ok=True)
 
 	torch.save(model.state_dict(), f'{path}{args.save_model}')
+
+
+def get_loss(args):
+	if args.n_classes < 2:
+		return torch.nn.BCELossWithLogits()
+	else:
+		return torch.nn.CrossEntropyLoss()
