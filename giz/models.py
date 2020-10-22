@@ -96,11 +96,11 @@ def create_model(args):
 
 
 def get_model(args):
-	path = get_save_path(args) + 'pretrain/'
+	path = get_save_path(args)
 
 	model = GIZModel(args)
 
-	if os.path.exists(path):
+	if os.path.exists(path) and len(os.listdir(path)):
 		model.load_state_dict(torch.load(f'{path}{args.save_model}'))
 
 	model
