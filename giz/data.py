@@ -47,11 +47,9 @@ class GIZDataset(Dataset):
 
 			dtype = torch.long
 
-			try:
-				if self.args['loss']:
-					dtype = torch.float
-			except:
-				pass
+			if self.args['loss'].startswith('bce'):
+				dtype = torch.float
+
 
 			out.update(
 				{'target': torch.tensor(y, dtype=dtype)}

@@ -16,7 +16,6 @@ parser.add_argument('-size', type=int, default=224, help='image size')
 parser.add_argument('-nb_layer', type=int, default=0, help='')
 parser.add_argument('-drop_rate', type=float, default=0.5, help='')
 parser.add_argument('-loss', choices=['ce', 'bce'], default='ce', help='')
-
 parser.add_argument('--pseudo', action='store_true', help='use pseudo labels for training')
 parser.add_argument('--pretrain', action='store_true', help='')
 parser.add_argument('-model_hub', type=str, default='model_hub/', help='')
