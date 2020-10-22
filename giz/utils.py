@@ -62,7 +62,7 @@ def save_model(model, args):
 
 
 def get_loss(args):
-	if args.n_classes < 2:
+	if args.loss == 'bce':
 		return torch.nn.BCELossWithLogits()
 	else:
 		return torch.nn.CrossEntropyLoss()

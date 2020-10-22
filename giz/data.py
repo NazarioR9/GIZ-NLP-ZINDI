@@ -17,6 +17,7 @@ class GIZDataset(Dataset):
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
 		self.map = dict(zip(self.classes, range(len(self.classes))))
+		self.args = args
 		
 	def __len__(self):
 		return len(self.df)
@@ -44,8 +45,16 @@ class GIZDataset(Dataset):
 			y = self.df.loc[idx, 'target']
 			y = self.map[y]
 
+			dtype = torch.long
+
+			try:
+				if self.args['loss']:
+					dtype = torch.float
+			except:
+				pass
+
 			out.update(
-				{'target': torch.tensor(y, dtype=torch.long)}
+				{'target': torch.tensor(y, dtype=dtype)}
 				)
 
 		return out
@@ -58,14 +67,14 @@ def load_dataset(args):
 		proc_fun = preprocess_mfcc
 
 	train = pd.read_csv(args.data + 'Train.csv')
-	trainset = GIZDataset(train, proc_fun, size=args.size)
+	trainset = GIZDataset(train, proc_fun, size=args.size, loss=args.loss)
 	trainloader = DataLoader(trainset, batch_size=args.bs, shuffle=True)
 
 	valoader = None
 
 	if not args.pretrain:
 		val = pd.read_csv(args.data + 'Val.csv')
-		valset = GIZDataset(val, proc_fun, size=args.size, phase='val')
+		valset = GIZDataset(val, proc_fun, size=args.size, phase='val', loss=args.loss)
 		valoader = DataLoader(valset, batch_size=args.bs//2)
 
 	return trainloader, valoader
