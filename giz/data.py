@@ -34,9 +34,11 @@ class GIZDataset(Dataset):
 		fn = self.df.loc[idx, 'fn']
 		wav = self.read_wav(fn)
 		wav = self.proc_fun(wav, self.sr)
-		if not self.args['mono']:
+		if self.args['mono']:
+			wav = np.expand_dims(wav, axis=0)
+		else:
 			wav = mono_to_color(wav)
-		wav = resize(wav)
+		wav = resize(wav, self.size)
 
 		out = {
 			'wav': torch.from_numpy(wav).float(),
