@@ -63,7 +63,7 @@ def load_dataset(args):
 
 	valoader = None
 
-	if !args.pretrain:
+	if not args.pretrain:
 		val = pd.read_csv(args.data + 'Val.csv')
 		valset = GIZDataset(val, proc_fun, size=args.size, phase='val')
 		valoader = DataLoader(valset, batch_size=args.bs//2)
