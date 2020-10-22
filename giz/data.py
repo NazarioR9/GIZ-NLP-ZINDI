@@ -34,7 +34,8 @@ class GIZDataset(Dataset):
 		fn = self.df.loc[idx, 'fn']
 		wav = self.read_wav(fn)
 		wav = self.proc_fun(wav, self.sr)
-		wav = mono_to_color(wav)
+		if self.args['mono']:
+			wav = mono_to_color(wav)
 		wav = resize(wav)
 
 		out = {
@@ -65,14 +66,14 @@ def load_dataset(args):
 		proc_fun = preprocess_mfcc
 
 	train = pd.read_csv(args.data + 'Train.csv')
-	trainset = GIZDataset(train, proc_fun, size=args.size, loss=args.loss)
+	trainset = GIZDataset(train, proc_fun, size=args.size, loss=args.loss, mono=args.mono)
 	trainloader = DataLoader(trainset, batch_size=args.bs, shuffle=True)
 
 	valoader = None
 
 	if not args.pretrain:
 		val = pd.read_csv(args.data + 'Val.csv')
-		valset = GIZDataset(val, proc_fun, size=args.size, phase='val', loss=args.loss)
+		valset = GIZDataset(val, proc_fun, size=args.size, phase='val', loss=args.loss, mono=args.mono)
 		valoader = DataLoader(valset, batch_size=args.bs//2)
 
 	return trainloader, valoader
