@@ -10,5 +10,3 @@ mkdir data/raw/ data/processed/ data/praw/
 python pyscripts/init.py -username $1 -download #Connnects the user and download the dataset from zindi
 unzip -q data/raw/audio_files.zip -d data/
 unzip -q data/raw/AdditionalUtterances.zip -d data/
-
-python pyscripts/init.py -pp
