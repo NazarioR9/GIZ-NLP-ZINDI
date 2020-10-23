@@ -50,28 +50,30 @@ def one_epoch(model, dataloader, device, opt=None, criterion=None, phase="train"
 	epoch_loss = 0
 	size = len(dataloader)
 
-	for i, data in enumerate(dataloader):
-		
-		data['wav'] = data['wav'].to(device)
-		data['target'] = data['target'].to(device)
+	with torch.set_enable_grad(phase=='train'):
 
-		output = model(data['wav'])
+		for i, data in enumerate(dataloader):
+			
+			data['wav'] = data['wav'].to(device)
+			data['target'] = data['target'].to(device)
 
-		try:
-			loss = criterion(output, data['target'])
-			epoch_loss += loss.item()
-		except Exception:
-			if phase=='train':
-				raise ValueError("Make sure that **data as key 'target'** or **phase is correct**.")
+			output = model(data['wav'])
 
-		if phase=="train":
-			loss.backward()
-			opt.step()
-			opt.zero_grad()
+			try:
+				loss = criterion(output, data['target'])
+				epoch_loss += loss.item()
+			except Exception:
+				if phase=='train':
+					raise ValueError("Make sure that **data as key 'target'** or **phase is correct**.")
+
+			if phase=="train":
+				loss.backward()
+				opt.step()
+				opt.zero_grad()
 
 
-		if epoch_loss:
-			print(f"\r[{i+1}/{size}] {phase} loss : {epoch_loss/(i+1)}", end='')
-	print()
+			if epoch_loss:
+				print(f"\r[{i+1}/{size}] {phase} loss : {epoch_loss/(i+1)}", end='')
+		print()
 
 	return epoch_loss
