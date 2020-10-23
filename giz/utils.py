@@ -66,3 +66,11 @@ def get_loss(args):
 		return torch.nn.BCELossWithLogits()
 	else:
 		return torch.nn.CrossEntropyLoss()
+
+def get_proc_func(args):
+	if 'mel' in args.proc:
+		proc_fun = preprocess_mel
+	else:
+		proc_fun = preprocess_mfcc
+
+	return proc_fun

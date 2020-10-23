@@ -1,5 +1,6 @@
+import torch
 import torch.nn as nn
-from torch.optim import AdamW
+from torch.optim import AdamW, Adam
 from tqdm import tqdm
 import numpy as np
 from .data import load_dataset
@@ -50,7 +51,7 @@ def one_epoch(model, dataloader, device, opt=None, criterion=None, phase="train"
 	epoch_loss = 0
 	size = len(dataloader)
 
-	with torch.set_enable_grad(phase=='train'):
+	with torch.set_grad_enabled(phase=='train'):
 
 		for i, data in enumerate(dataloader):
 			

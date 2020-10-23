@@ -65,10 +65,7 @@ class GIZDataset(Dataset):
 
 
 def load_dataset(args):
-	if 'mel' in args.proc:
-		proc_fun = preprocess_mel
-	else:
-		proc_fun = preprocess_mfcc
+	proc_fun = get_proc_func(args)
 
 	train = pd.read_csv(args.data + 'Train.csv')
 	trainset = GIZDataset(train, proc_fun, size=args.size, loss=args.loss, mono=args.mono)

@@ -13,6 +13,7 @@ parser.add_argument('-username', type=str, help='Your Zindi username')
 parser.add_argument('-data', type=str, default='data/raw/', help="***")
 parser.add_argument('-to', type=str, default='data/processed/', help="***")
 parser.add_argument('-mid', type=str, default='data/praw/', help="***")
+parser.add_argument('-use', type=str, default='data/processed/', help="data to use for split")
 parser.add_argument('-strategy', choices=['tts', 'skf'], default='tts', help="split strategy")
 parser.add_argument('-n_splits', type=int, default=1, help="nb of splits. Is used with kf/skf")
 parser.add_argument('-split', type=float, default=0.2, help="test size portion")
@@ -62,8 +63,8 @@ def pretrain_processing(args):
 
 
 def splitter(args):
-	df = pd.read_csv(args.to + 'Train.csv')
-	path = args.to + args.strategy + '/'
+	df = pd.read_csv(args.use + 'Train.csv')
+	path = args.use + args.strategy + '/'
 
 	if args.strategy=='tts':
 		train, val = train_test_split(df, test_size=args.split, stratify=df['target'], random_state=args.seed)
