@@ -6,12 +6,12 @@ import librosa
 
 
 def preprocess_mfcc(signal, sr):
-	mfcc = librosa.feature.mfcc(signal, sr=sr, n_mfcc=40)
+	mfcc = librosa.feature.mfcc(signal, sr=sr)
 	mfcc = mfcc.astype(np.float32)
 	return mfcc
 
 def preprocess_mel(signal, sr):
-	spectrogram = librosa.feature.melspectrogram(signal, sr=sr, n_mels=128, fmin=20, fmax=8000)
+	spectrogram = librosa.feature.melspectrogram(signal, sr=sr)
 	spectrogram = librosa.power_to_db(spectrogram)
 	spectrogram = spectrogram.astype(np.float32)
 
@@ -42,7 +42,9 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 
 def resize(img, size=None):
 	if size is not None:
-		return cv2.resize(img, (size, size))
+		if isinstance(size, int):
+			size = (size, size)
+		return cv2.resize(img, size)
 	return img
 
 def get_save_path(args):

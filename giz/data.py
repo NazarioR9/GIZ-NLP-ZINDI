@@ -13,7 +13,7 @@ class GIZDataset(Dataset):
 		self.phase = phase
 		self.size = size
 		self.sr = 44100
-		self.secs = 3
+		self.secs = 5
 		self.proc_fun = proc_fun
 		self.classes = self.df.target.unique()
 		self.map = dict(zip(self.classes, range(len(self.classes))))
@@ -23,7 +23,7 @@ class GIZDataset(Dataset):
 		return len(self.df)
 
 	def read_wav(self, fn):
-		wav = librosa.load(fn, sr=self.sr)[0]
+		wav = librosa.load(fn, sr=self.sr, mono=True)[0]
 		length = self.sr*self.secs
 
 		if len(wav) < length:

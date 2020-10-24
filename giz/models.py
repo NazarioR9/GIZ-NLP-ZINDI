@@ -81,7 +81,7 @@ def create_model(args, model=None):
 	n = args.nb_layer
 
 
-	model = model or getattr(tvm, model_name)(pretrained=True)
+	model = model or getattr(tvm, model_name)(pretrained=args.imagenet_weights)
 
 	#*******Head layer
 	if args.mono:

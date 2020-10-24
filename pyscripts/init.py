@@ -12,10 +12,11 @@ parser = argparse.ArgumentParser(description='Logging phase')
 parser.add_argument('-username', type=str, help='Your Zindi username')
 parser.add_argument('-data', type=str, default='data/raw/', help="***")
 parser.add_argument('-to', type=str, default='data/processed/', help="***")
-parser.add_argument('-mid', type=str, default='data/praw/', help="***")
-parser.add_argument('-use', type=str, default='data/praw/', help="data to use for split")
+parser.add_argument('-base', type=str, default='data/processed/base/', help="***")
+parser.add_argument('-add', type=str, default='data/processed/add/', help="***")
+parser.add_argument('-use', type=str, default='data/processed/base/', help="data to use for split")
 parser.add_argument('-strategy', choices=['tts', 'skf'], default='tts', help="split strategy")
-parser.add_argument('-n_splits', type=int, default=1, help="nb of splits. Is used with kf/skf")
+parser.add_argument('-n_splits', type=int, default=5, help="nb of splits. Is used with kf/skf")
 parser.add_argument('-split', type=float, default=0.2, help="test size portion")
 parser.add_argument('-seed', type=int, default=42, help='randomness factor')
 
@@ -34,11 +35,12 @@ def preprocessing(args):
 
 	add = pd.DataFrame({'fn': additionnal})
 	add['target'] = add['fn'].apply(lambda x: x.split('/')[-2])
+	add.to_csv(args.add + 'Train.csv', index=False)
 
 	train = pd.read_csv(args.data + 'Train.csv')
 	train['fn'] = 'data/' + train['fn']
 	train.rename(columns = {'label': 'target'}, inplace=True)
-	train.to_csv(args.mid + 'Train.csv', index=False)
+	train.to_csv(args.base + 'Train.csv', index=False)
 
 
 	train = pd.concat([train, add], axis=0)
@@ -48,18 +50,23 @@ def preprocessing(args):
 	subs['fn'] = 'data/' + subs['fn']
 	subs.to_csv(args.to + 'SampleSubmission.csv', index=False)
 
-def pretrain_processing(args):
-	train = pd.read_csv(args.mid + 'Train.csv')
+def info(args):
+	train = pd.read_csv(args.base + 'Train.csv')
 	full = pd.read_csv(args.to + 'Train.csv')
+	add = pd.read_csv(args.add + 'Train.csv')
 
-	lung_words = full[:train.shape[0]].target.unique()
+	lung_words = add.target.unique()
 	eng_words = [w for w in train.target.unique() if w not in lung_words]
 
-	train['label'] = train['target'].values
-	train = train[['fn', 'label']]
-	train['target'] = train.label.apply(lambda x: int(x in eng_words))
+	dicts = {"base data": train, "add data": add, "full data": full}
 
-	train.to_csv(args.mid + 'Train.csv', index=False)
+	with open("data/info.txt", "wb") as f:
+		for name, df in dicts.items():
+			info = f"##{name}##. \nIt contains {n} unique classes .\n"
+			f.write(info)
+			f.write("\n")
+		f.close()
+
 
 
 def splitter(args):
@@ -96,7 +103,7 @@ def main(parser):
 	if args.pp: 
 		preprocessing(args)
 		splitter(args)
-		pretrain_processing(args)
+		info(args)
 
 
 
