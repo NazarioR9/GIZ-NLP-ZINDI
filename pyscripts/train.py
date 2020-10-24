@@ -8,6 +8,7 @@ parser.add_argument('-model_name', type=str, default='resnet18', help='model nam
 parser.add_argument('-base_name', type=str, default='resnet', help='model root name')
 parser.add_argument('-save_model', type=str, default='model.bin', help='saved model name')
 parser.add_argument('-n_classes', type=int, default=193, help='')
+parser.add_argument('-pretrain_classes', type=int, default=193, help='')
 parser.add_argument('-proc', type=str, default='mel', help='')
 parser.add_argument('-bs', type=int, default=32, help='batch size')
 parser.add_argument('-lr', type=float, default=1e-4, help='learning rate')
