@@ -52,16 +52,33 @@ class DenseBlock(nn.Module):
 	def __init__(self, fc_size, dp_rate, n_classes=None):
 		super(DenseBlock, self).__init__()
 
-		n = n_classes or fc_size//2
+		out = fc_size//2
+		dp = dp_rate//2
+		act = nn.ReLU()
 
-		self.dropout = nn.Dropout(dp_rate)
-		self.linear = nn.Linear(fc_size, n)
+		if n_classes:
+			out = n_classes
+			dp = dp_rate
+			act = nn.Identity()
+
+		self.bn = nn.nn.BatchNorm2d(fc_size)
+		self.dropout = nn.Dropout(dp)
+		self.linear = nn.Linear(fc_size, out, bias=False)
+		self.act = act
 
 		nn.init.xavier_normal_(self.linear.weight)
 
 	def forward(self, x):
+		x = self.bn(x)
 		x = self.dropout(x)
-		return self.linear(x)
+		x = self.linear(x)
+		return self.act(x)
+
+
+
+class Flatten(nn.Module):
+	def forward(self, x):
+		return x.view(x.size(0), -1)
 
 
 
@@ -85,20 +102,26 @@ def create_model(args, model=None):
 
 	#*******Head layer
 	if args.mono:
-		w = getattr(model, __HEAD__[base_name])
-		w = w.weight.sum(dim=1, keepdim=True)
+		conv = getattr(model, __HEAD__[base_name])
+		weight = conv.weight.sum(dim=1, keepdim=True)
 
-		head = nn.Conv2d(1, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
-		head.weight = torch.nn.Parameter(w)
+		nconv = nn.Conv2d(
+			in_channels = 1,
+			out_channels=conv.out_channels,
+			kernel_size=conv.kernel_size,
+			stride=conv.stride,
+			padding=conv.padding)
+		nconv.weight = torch.nn.Parameter(weight)
 
-		setattr(model, __HEAD__[base_name], head)
+		setattr(model, __HEAD__[base_name], nconv)
 
 	#*******Last layer
-	fc_size = __FC__[base_name][model_name]
 	fc_name = __LAST__[base_name]
+	fc_size = getattr(model, fc_name).out_features
 
 
-	layers = []
+	layers = [Flatten()]
+
 	for _ in range(n):
 		layers += [DenseBlock(fc_size, drop_rate)]
 		fc_size = fc_size//2
