@@ -61,7 +61,7 @@ class DenseBlock(nn.Module):
 			dp = dp_rate
 			act = nn.Identity()
 
-		self.bn = nn.nn.BatchNorm2d(fc_size)
+		self.bn = nn.BatchNorm1d(fc_size)
 		self.dropout = nn.Dropout(dp)
 		self.linear = nn.Linear(fc_size, out, bias=False)
 		self.act = act
@@ -117,10 +117,11 @@ def create_model(args, model=None):
 
 	#*******Last layer
 	fc_name = __LAST__[base_name]
-	fc_size = getattr(model, fc_name).out_features
+	fc_size = __FC__[base_name][model_name]
+	# getattr(model, fc_name).out_features
 
 
-	layers = [Flatten()]
+	layers = []
 
 	for _ in range(n):
 		layers += [DenseBlock(fc_size, drop_rate)]
