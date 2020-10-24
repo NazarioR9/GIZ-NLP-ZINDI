@@ -62,7 +62,7 @@ def info(args):
 
 	with open("data/info.txt", "wb") as f:
 		for name, df in dicts.items():
-			info = f"##{name}##. \nIt contains {n} unique classes .\n"
+			info = f"##{name}##. \nIt contains {df.target.nunique()} unique classes .\n"
 			f.write(info)
 			f.write("\n")
 		f.close()
