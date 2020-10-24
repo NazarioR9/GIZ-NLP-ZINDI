@@ -14,7 +14,7 @@ parser.add_argument('-data', type=str, default='data/raw/', help="***")
 parser.add_argument('-to', type=str, default='data/processed/', help="***")
 parser.add_argument('-base', type=str, default='data/processed/base/', help="***")
 parser.add_argument('-add', type=str, default='data/processed/add/', help="***")
-parser.add_argument('-use', type=str, default='data/processed/add/', help="data to use for split")
+parser.add_argument('-use', type=str, default='data/processed/base/', help="data to use for split")
 parser.add_argument('-strategy', choices=['tts', 'skf'], default='tts', help="split strategy")
 parser.add_argument('-n_splits', type=int, default=5, help="nb of splits. Is used with kf/skf")
 parser.add_argument('-split', type=float, default=0.2, help="test size portion")
@@ -60,7 +60,7 @@ def info(args):
 
 	dicts = {"base data": train, "add data": add, "full data": full}
 
-	with open("data/info.txt", "wb") as f:
+	with open("data/info.txt", "w") as f:
 		for name, df in dicts.items():
 			info = f"##{name}##. \nIt contains {df.target.nunique()} unique classes .\n"
 			f.write(info)
@@ -76,7 +76,7 @@ def splitter(args):
 	if args.strategy=='tts':
 		train, val = train_test_split(df, test_size=args.split, stratify=df['target'], random_state=args.seed)
 		
-		os.makedirs(path)
+		os.makedirs(path, exist_ok=True)
 
 		train.to_csv(path + 'Train.csv', index=False)
 		val.to_csv(path + 'Val.csv', index=False)
