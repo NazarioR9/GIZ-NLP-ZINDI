@@ -33,7 +33,7 @@ def train(args):
 			save_model(model, args)
 			continue
 
-		val_loss = one_epoch(model, valoader, device, opt, criterion, phase="val")
+		val_loss = eval(model, valoader, device, criterion, phase="val")
 
 		if val_loss < best_loss:
 			best_loss = val_loss
@@ -41,40 +41,57 @@ def train(args):
 
 
 def one_epoch(model, dataloader, device, opt=None, criterion=None, phase="train"):
+	model.train()
 
-	if phase=="train":
-		model.train()
-		opt.zero_grad()
-	else:
-		model.eval()
-	
 	epoch_loss = 0
 	size = len(dataloader)
 
-	with torch.set_grad_enabled(phase=='train'):
 
+	for i, data in enumerate(dataloader):
+		opt.zero_grad()
+		
+		data['wav'] = data['wav'].to(device)
+		data['target'] = data['target'].to(device)
+
+		output = model(data['wav'])
+
+		loss = criterion(output, data['target'])
+		epoch_loss += loss.item()
+	
+		loss.backward()
+		opt.step()
+
+		print(f"\r[{i+1}/{size}] {phase} loss : {epoch_loss/(i+1)}", end='')
+	print()
+
+	return epoch_loss
+
+def eval(model, dataloader, device, criterion=None, phase="val"):
+	model.eval()
+
+	epoch_loss = 0
+	preds = []
+	size = len(dataloader)
+
+	with torch.no_grad():
 		for i, data in enumerate(dataloader):
-			
+
 			data['wav'] = data['wav'].to(device)
 			data['target'] = data['target'].to(device)
 
 			output = model(data['wav'])
 
-			try:
+			if phase=='val':
 				loss = criterion(output, data['target'])
 				epoch_loss += loss.item()
-			except Exception:
-				if phase=='train':
-					raise ValueError("Make sure that **data as key 'target'** or **phase is correct**.")
-
-			if phase=="train":
-				loss.backward()
-				opt.step()
-				opt.zero_grad()
-
-
-			if epoch_loss:
+				
 				print(f"\r[{i+1}/{size}] {phase} loss : {epoch_loss/(i+1)}", end='')
+			else:
+				preds += output.detach().cpu().numpy().tolist()
+
 		print()
 
-	return epoch_loss
+	if phase=='val':
+		return epoch_loss
+
+	return preds
