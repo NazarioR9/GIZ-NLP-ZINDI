@@ -13,7 +13,7 @@ from giz.imports import *
 
 
 parser = argparse.ArgumentParser(description="Sanity check test")
-parser.add_argument("-data", , type=str, default="data/processed/", help="")
+parser.add_argument("-data", type=str, default="data/processed/", help="")
 
 # parser.add_argument('-model_name', type=str, default='resnet18', help='model name')
 # parser.add_argument('-base_name', type=str, default='resnet', help='model root name')
@@ -40,23 +40,23 @@ parser.add_argument('--mel', action='store_true', default=True, help='')
 
 
 def testDataset(args):
-	n = 3
+	nrows = 3
 
 	proc_fun = get_proc_func(args)
 	train = pd.read_csv(args.data + 'Train.csv')
 	ds = GIZDataset(train, proc_fun, size=args.size, loss=args.loss, mono=args.mono)
 
-	rands = np.random.randint(0, len(ds), n**2)
+	rands = np.random.randint(0, len(ds), nrows**2)
 
 	fig = plt.figure(figsize=(12,10))
 
-	for i in rands:
+	for i, n in enumerate(rands):
 	    out = ds[i]
 	    img, y = out.values()
-	    img = img.numpy()
+	    img = img.numpy().squeeze(0)
 	    y = y.numpy()
 
-	    ax = plt.subplot(n, n, i+1)
+	    ax = plt.subplot(nrows, nrows, i+1)
 	    plt.imshow(img)
 	    plt.title(ds.classes[y])
 	plt.show()
