@@ -61,3 +61,8 @@ def testDataset(args):
 	    plt.title(ds.classes[y])
 	plt.show()
 
+
+if __name__ == '__main__':
+	args = parser.parse_args()
+
+	testDataset(args)
