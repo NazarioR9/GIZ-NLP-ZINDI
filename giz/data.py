@@ -25,7 +25,7 @@ class GIZDataset(Dataset):
 
 	def read_wav(self, fn):
 		wav = librosa.load(fn, sr=self.sr, mono=True)[0]
-		return self.pad(wav)
+		return wav[:self.length]
 
 	def pad(self, wav):
 		if len(wav) < self.length:
@@ -36,6 +36,7 @@ class GIZDataset(Dataset):
 		fn = self.df.loc[idx, 'fn']
 		wav = self.read_wav(fn)
 		wav = self.proc_fun(wav, self.sr)
+		wav = self.pad(wav)
 		if self.args['mono']:
 			wav = resize(wav, self.size)
 			wav = np.expand_dims(wav, axis=0)

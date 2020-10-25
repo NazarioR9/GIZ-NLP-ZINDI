@@ -4,7 +4,60 @@ import cv2
 import numpy as np
 import librosa
 
+'''
+def im_from_audio(fn, sample_rate=44100, window_length=0.05, window_step=0.0045, NFFT=2205):
+  
+  # Load the audio into an array (signal) at the specified sample rate
+  signal, sr = librosa.load(fn, sr=sample_rate)
 
+  # preemphasis
+  signal = psf.sigproc.preemphasis(signal, coeff=0.95)
+
+  # get specrogram
+  # Get the frames
+  frames = psf.sigproc.framesig(signal, 
+                                  window_length*sample_rate, 
+                                  window_step*sample_rate, 
+                                  lambda x:np.ones((x,)))        # Window function 
+    
+  # magnitude Spectrogram
+  spectrogram = np.rot90(psf.sigproc.magspec(frames, NFFT))
+  
+  # get rid of high frequencies
+  spectrogram = spectrogram[512:,:]
+
+  # normalize in [0, 1]
+  spectrogram -= spectrogram.min(axis=None)
+  spectrogram /= spectrogram.max(axis=None)
+
+  # Clip to max 512, 512
+  spectrogram = spectrogram[:512, :512]
+  
+  return spectrogram
+
+def get_x(fn):
+ 
+  # Use our function from earlier
+  spectrogram = im_from_audio(fn) # a 2D array
+ 
+  # Pad to make sure it is 512 x 512
+  w, h = spectrogram.shape
+  spectrogram = np.pad(spectrogram, [(0, 512-w), (0, 512-h)])
+ 
+   # Scale to (0, 255)
+  spectrogram  -= spectrogram.min()
+  spectrogram *= 255.0/spectrogram.max()
+ 
+  # Make it uint8
+  im_arr = np.array(spectrogram, np.uint8)
+ 
+  # Make it rgb (hint - some fun tricks you can do here!)
+  r = im_arr
+  g = im_arr
+  b = im_arr
+ 
+  return np.stack([r, g, b], axis=-1)
+'''
 def preprocess_mfcc(signal, sr):
 	mfcc = librosa.feature.mfcc(signal, sr=sr)
 	mfcc = mfcc.astype(np.float32)
