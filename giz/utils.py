@@ -12,8 +12,8 @@ def preprocess_psf(signal, sr, window_length=0.05, window_step=0.0045, NFFT=2205
   # get specrogram
   # Get the frames
   frames = psf.sigproc.framesig(signal, 
-                              window_length*sample_rate, 
-                              window_step*sample_rate, 
+                              window_length*sr, 
+                              window_step*sr, 
                               lambda x:np.ones((x,))) 
   # magnitude Spectrogram
   spectrogram = np.rot90(psf.sigproc.magspec(frames, NFFT))
@@ -44,7 +44,7 @@ def mono_to_color(wav, eps=1e-6, mean=None, std=None):
 	return np.stack([wav, wav, wav], axis=-1)
 
 
-def normalize(wav):
+def normalize(wav, mean=None, std=None):
 	mean = mean or wav.mean()
 	std = std or wav.std()
 	wav = (wav - mean) / (std + eps)
