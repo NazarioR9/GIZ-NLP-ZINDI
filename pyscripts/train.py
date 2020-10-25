@@ -9,7 +9,7 @@ parser.add_argument('-base_name', type=str, default='resnet', help='model root n
 parser.add_argument('-save_model', type=str, default='model.bin', help='saved model name')
 parser.add_argument('-n_classes', type=int, default=193, help='')
 parser.add_argument('-pretrain_classes', type=int, default=193, help='')
-parser.add_argument('-proc', type=str, default='mel', help='')
+parser.add_argument('-proc', choices=['mel', 'mfcc', 'psf'], default='mel', help='')
 parser.add_argument('-bs', type=int, default=32, help='batch size')
 parser.add_argument('-lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('-epochs', type=int, default=1, help='number of training unit')
@@ -25,6 +25,7 @@ parser.add_argument('-pseudo_dir', type=str, default='pseudo/', help='')
 parser.add_argument('--mono', action='store_true', help='')
 parser.add_argument('--mel', action='store_true', default=True, help='')
 parser.add_argument('--mfcc', action='store_true', help='')
+parser.add_argument('--psf', action='store_true', help='')
 parser.add_argument('--cuda', action='store_true', help='')
 
 
@@ -39,6 +40,10 @@ def main():
 
 	if args.mfcc:
 		args.proc = 'mfcc'
+		train(args)
+
+	if args.psf:
+		args.proc = 'psf'
 		train(args)
 
 
